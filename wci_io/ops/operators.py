@@ -562,7 +562,7 @@ class WciBufDumper(bpy.types.Operator):
 @auto_register  
 @auto_translate
 class WciBufImporter(bpy.types.Operator):
-    bl_label = "从提取路径导入模型"
+    bl_label = "从工程路径导入模型"
     bl_idname = "wci.tool_buf_importer"
     bl_options = {'UNDO'}
 

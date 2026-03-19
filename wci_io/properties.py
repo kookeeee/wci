@@ -72,8 +72,8 @@ class WciProperties(bpy.types.PropertyGroup):
     ) # type: ignore
 
     dump_path: bpy.props.StringProperty(
-        name="3Dmigoto 帧提取文件路径",
-        description="3Dmigoto 帧提取文件路径",
+        name="3Dmigoto 帧转储文件路径",
+        description="3Dmigoto 帧转储文件路径",
         default="",
         subtype="DIR_PATH",
     ) # type: ignore
