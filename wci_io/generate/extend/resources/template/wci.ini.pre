@@ -1,0 +1,34 @@
+[Global_Head]
+; 勿删，Global_Head 是wci全局注释，在生成时会忽略这部分内容
+
+; wci预处理ini
+; 可以写入符合3dmigoto规范的的mod配置数据
+; 调用wci在生成mod过程中所使用的一些信息，包括按键信息
+；为保证资源能正常识别，切换能正常写入，所有贴图资源命名为Resoruce_texname
+; 设定TextureOverride生效的顺序match_priority= -1
+
+; 使用按键：eg: 
+
+;[TextureOVerride_6986f28e_IB]
+;hash = 6986f28e
+;match_first_index = 0
+;ib = Resource_6986f28e_Component1
+;if $key_sign_9 == 1
+;   ps-t13 = $cleg.diffueMap
+;   ps-t14 = $clg.NormalMap 
+;   drawindexed = 1, 0, 0
+;endif
+
+; 贴图替换
+
+;[TextureOverrideFaceIB]
+;hash = 6986f28e
+;run = CommandListSkinTexture
+;ps-t3 = ResourceFaceADiffuse
+;run = CommandList\ZZMI\SetTextures
+
+
+;[ResourceFaceADiffuse]
+;filename = Texture/FaceDiffuseMap.dds
+
+;ini配置请从这里开始编写

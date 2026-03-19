@@ -1,0 +1,40 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract version from __init__.py
+        id: get_version
+        run: |
+          VERSION=$(grep -Po '(?<="version": \()\d+, \d+, \d+, \d+' wci_io/__init__.py | tr -d ' ' | sed 's/,/./g')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+
+      - name: Prepare plugin directory
+        run: |
+          mkdir temp_plugin
+          mkdir temp_plugin/wci_io
+          rsync -av --exclude-from=.gitignore wci_io/ temp_plugin/wci_io/
+          rm -rf temp_plugin/.git* 2>/dev/null || true
+
+      - name: Create ZIP archive
+        run: |
+          cd temp_plugin
+          zip -r ../wci_io.zip ./*
+          cd ..
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: wci_io.zip
