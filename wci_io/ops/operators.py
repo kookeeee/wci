@@ -915,7 +915,12 @@ class WciMatchLodsImporter(bpy.types.Operator):
                     for importer in importers:
                         if ib_hash == importer.data["ib"]["hash"]:
                             if len(importer.group_indices)>0 and len(lod_importer.group_indices)>0:#有顶点组才能匹配
-                                match_vgs=match_vertex_groups(importer.vertices,lod_importer.vertices)
+                                try:
+                                    match_vgs=match_vertex_groups(importer.vertices,lod_importer.vertices)
+                                except Exception as e:
+                                    print(importer.data["ib"]["hash"],lod_importer.data["ib"]["hash"])
+                                    print(f"匹配顶点组时出错: {e}")
+                                    match_vgs={}
                             else:
                                 match_vgs={}
                             ex_config.wci_lods[importer.data["ib"]["hash"]]={
@@ -992,8 +997,12 @@ class WciCustomMatchLodsImporter(bpy.types.Operator):
         print(main_ib,lod_ib,dist)
         
         if len(main_importer.group_indices)>0 and len(lod_importer.group_indices)>0:
-            #有顶点组才能匹配
-            match_vgs=match_vertex_groups(main_importer.vertices,lod_importer.vertices)
+            try:
+                #有顶点组才能匹配
+                match_vgs=match_vertex_groups(main_importer.vertices,lod_importer.vertices)
+            except Exception as e:
+                print(f"匹配顶点组时出错: {e}")
+                match_vgs={}
         else:
             match_vgs={}
         ex_config.wci_lods[main_importer.data["ib"]["hash"]]={

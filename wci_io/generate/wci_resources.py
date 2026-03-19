@@ -176,7 +176,10 @@ class Resource:
         for line in raw_data.split("\n"):
             line=line.strip()
             if len(line)>0 and line[0]!=";" and "=" in line:
-                key,value=line.split(";")[0].split("=")
+                line_data = line.split(";")[0]
+                equ_index = line_data.index("=")
+                key = line_data[0:equ_index]
+                value = line_data[equ_index+1:]
                 key=key.strip()
                 value=value.strip()
                 if key == "type":

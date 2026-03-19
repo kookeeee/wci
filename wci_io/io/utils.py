@@ -213,8 +213,8 @@ def remap_zero_rows(vg_ids: np.ndarray, vg_weights: np.ndarray) -> np.ndarray:
         num_rows = vg_ids.shape[0]
         num_zeros = vg_ids.shape[1] - 1
         vg_weights = np.hstack([
-            np.ones((num_rows, 1), dtype=np.uint8),
-            np.zeros((num_rows, num_zeros), dtype=np.uint8)
+            np.ones((num_rows, 1), dtype=np.int32),
+            np.zeros((num_rows, num_zeros), dtype=np.int32)
         ])
     # Replace zeros where weight > 0
     mask = (vg_ids == 0) & (vg_weights > 0)
