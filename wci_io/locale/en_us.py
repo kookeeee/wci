@@ -27,7 +27,7 @@ def translation_dictionary() -> Dict[Tuple[str, str], str]:
         ("Operator", "从UV加载顶点的属性"): "Load Vertex Attributes from UV",
         ("Operator", "按材质分离网格"): "Separate Mesh by Material",
         ("Operator", "数据提取"): "Extract Data",
-        ("Operator", "从工程路径导入模型"): "Import Models from Extraction Path",
+        ("Operator", "从工程路径导入模型"): "Import Models from Project Path",
         ("Operator", "从analysis文件导入模型"): "Import Models from analysis.json",
         ("Operator", "从当前集合生成MOD"): "Generate MOD from Current Collection",
         ("Operator", "按顶点组合并网格"): "Merge Meshes by Vertex Groups",
