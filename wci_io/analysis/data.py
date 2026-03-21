@@ -173,7 +173,4 @@ class FileCollector:
 
                 # 按索引缓存
                 self.caches[index].append(file)
-        self.skip_tex_hashs = [hash for hash, count in ps_hash_dict.items() if count > 30]
-        if self.game == Game.AE:
-            #雨滴法线
-            self.skip_tex_hashs.append("afde0fcd")
+        self.skip_tex_hashs = [hash for hash, count in ps_hash_dict.items() if count >=len(self.IndexBufferFiles.keys())]

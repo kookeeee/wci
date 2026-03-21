@@ -12,7 +12,7 @@ bl_info = {
     "description": "wci's Blender addon for export and import 3dmigoto buffer",
     "blender": (4, 2, 0),
     "version": (0, 1, 0, 8),
-    "url":"https://github.com/kookeeee/wci",
+    "url": "https://github.com/kookeeee/wci",
     "author":"kookeeee",
     "location": "View3D",
     "category": "WCI"

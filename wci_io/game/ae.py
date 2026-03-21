@@ -16,6 +16,39 @@ def get_buffers():
             "write":"bin",
             "slots": [
                 {
+                    "ps-t20": {"name": "DiffuseMap"},
+                    "ps-t21": {"name": "LightMap"},
+                    "ps-t22": {"name": "NormalMap"},
+                    "ps-t23": {"name": "GlowMap"},
+                },
+                {
+                    "ps-t20": {"name": "DiffuseMap"},
+                    "ps-t21": {"name": "LightMap"},
+                    "ps-t22": {"name": "NormalMap"},
+                },
+                {
+                    "ps-t19": {"name": "DiffuseMap"},
+                    "ps-t20": {"name": "LightMap"},
+                    "ps-t21": {"name": "NormalMap"},
+                },
+                {
+                    "ps-t19": {"name": "DiffuseMap"},
+                    "ps-t20": {"name": "LightMap"},
+                    "ps-t21": {"name": "NormalMap"},
+                    "ps-t22": {"name": "GlowMap"},
+                },
+                {
+                    "ps-t18": {"name": "DiffuseMap"},
+                    "ps-t19": {"name": "LightMap"},
+                    "ps-t20": {"name": "NormalMap"},
+                    "ps-t21": {"name": "GlowMap"},
+                },
+                {
+                    "ps-t18": {"name": "DiffuseMap"},
+                    "ps-t19": {"name": "LightMap"},
+                    "ps-t20": {"name": "NormalMap"},
+                },
+                {
                     "ps-t17": {"name": "DiffuseMap"},
                     "ps-t18": {"name": "LightMap"},
                     "ps-t19": {"name": "NormalMap"},

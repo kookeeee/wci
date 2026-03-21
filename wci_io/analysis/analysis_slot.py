@@ -193,7 +193,7 @@ def analysis_slot(buf_dict: dict, fc: FileCollector, extract_path: str,
 
 
 # 更新指定对象贴图
-def update_custom_tex(buf_path:str,ib_hash:str,sub_alias:str):
+def update_custom_tex(game:str,buf_path:str,ib_hash:str,sub_alias:str):
 
     # 检查游戏配置文件
     user_game_buf_file = os.path.join(buf_path, ".wci")
@@ -202,7 +202,8 @@ def update_custom_tex(buf_path:str,ib_hash:str,sub_alias:str):
             buf_dict = json.loads(f.read())
     else:
         # 自定义替换贴图 只读取.wci文件
-        return None,None
+        from .data import game_buf_info
+        buf_dict=game_buf_info(game)
     ib_path = os.path.join(buf_path,ib_hash)
     if os.path.isdir(ib_path):
         analysis_json_path = os.path.join(ib_path,"analysis.json")
