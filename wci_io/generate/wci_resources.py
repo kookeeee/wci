@@ -961,6 +961,11 @@ def get_tex(buf_path,ib_hash,ib_alias,sub_alias,widgetname,default_slot_info)->L
     widgetname=re.sub(r'\.[0-9]+$', '', widgetname)
     for slot in default_slot_info:
         name=default_slot_info[slot]["name"]
+        if "file" not in default_slot_info[slot]:
+            continue
+        file=default_slot_info[slot]["file"]
+        if not os.path.isfile(os.path.join(buf_path,ib_hash,file)):
+            continue
         dds_file=""
         widget_name=remove_rightmost_digits(widgetname)
         #先找自己同名的没有才会去减序号找文件。
@@ -986,7 +991,6 @@ def get_tex(buf_path,ib_hash,ib_alias,sub_alias,widgetname,default_slot_info)->L
                     tex.slot=default_slot
                     tex.hash=default_slot_info[slot]["hash"]
                     tex.texname=default_slot_info[slot]["name"]
-                    file=default_slot_info[slot]["file"]
                     tex.file_path=os.path.join(buf_path,ib_hash,file)
                     tex.resource=f"Resource_"+file.replace("-","_").replace(".dds","").replace(".jpg","")
                     tex_info.append(tex)

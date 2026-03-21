@@ -89,23 +89,27 @@ def search_hit_slot_info_by_indices(indices:List[str],
         #命中的槽位
         now_hit_slots,now_weights = get_hit_slot_info(slots,slot_info,min_image_size)
         #找插槽最多的数据
-        if len(now_hit_slots.keys()) > len(hit_slot_info.keys()):
+        if now_weights > weights:
             hit_slot_info = now_hit_slots
             hit_index = index
             weights = now_weights
-        elif len(now_hit_slots.keys()) == len(hit_slot_info.keys()):
-            if now_weights > weights:
-                hit_slot_info = now_hit_slots
-                hit_index = index
-                weights = now_weights               
+        # elif len(now_hit_slots.keys()) > len(hit_slot_info.keys()):
+        #     hit_slot_info = now_hit_slots
+        #     hit_index = index
+        #     weights = now_weights
+        # elif len(now_hit_slots.keys()) == len(hit_slot_info.keys()):
+        #     if now_weights > weights:
+        #         hit_slot_info = now_hit_slots
+        #         hit_index = index
+        #         weights = now_weights               
     return hit_index,hit_slot_info
 
 def update_slot_info(buf_dict:Dict[str,Any],slots:List[Dict[str,str]],slot_info:Dict[str,Tuple[Any,]],match_key:str,file_path:str,extract_path:str):
     sub_alias = buf_dict["ib"]["info"][match_key]["alias"]
-    for slot in slot_info:
-        file,width,height,slot_hash = slot_info[slot]
-        slot_file = os.path.join(file_path, file)
-        if slot in slots.keys():
+    for slot in slots:
+        if slot in slot_info:
+            file,width,height,slot_hash = slot_info[slot]
+            slot_file = os.path.join(file_path, file)
             buf_type = file[-4:]
             new_file = buf_dict["ib"]["hash"] + f"-" + sub_alias + "-" + slots[slot]["name"] + buf_type
             extract_slot_file = os.path.join(extract_path, new_file)
@@ -118,6 +122,8 @@ def update_slot_info(buf_dict:Dict[str,Any],slots:List[Dict[str,str]],slot_info:
                     os.remove(os.path.join(extract_path, new_file))
                     new_file = new_file[0:-4] + ".dds"
             buf_dict["ib"]["info"][match_key]["slot"][slot] = {"hash": slot_hash, "file": new_file,"name":slots[slot]["name"],}
+        else:
+            buf_dict["ib"]["info"][match_key]["slot"][slot] = {"name":slots[slot]["name"],}
     return buf_dict
 
 def analysis_slot(buf_dict: dict, fc: FileCollector, extract_path: str,
@@ -242,6 +248,7 @@ def update_custom_tex(game:str,buf_path:str,ib_hash:str,sub_alias:str):
             #从全局slots中移除当前正在使用的slots
             from copy import deepcopy
             slots = deepcopy(buf_dict["ib"]["slots"])
+            remove_slots:list[Any] = []
             for i, d in enumerate(slots):
                 #移除当前正在使用的插槽
                 check= True
@@ -250,17 +257,20 @@ def update_custom_tex(game:str,buf_path:str,ib_hash:str,sub_alias:str):
                         check=False
                         break
                 if not check:
-                    del slots[i]
+                    remove_slots.append(slots[i])
+            for remove_slot in remove_slots:
+                slots.remove(remove_slot)
             # 重新查找
             hit_index,hit_slot_info=search_hit_slot_info_by_indices(indices,slots,tex_info,2)
             if hit_index != None:
                 #清理原本的贴图信息
                 for slot in analysis_json["ib"]["info"][key]["slot"]:
-                    file_path  = os.path.join(ib_path,analysis_json["ib"]["info"][key]["slot"][slot]["file"])
-                    if os.path.isfile(file_path):
-                        os.remove(file_path)
-                    if os.path.isfile(file_path[0:-4]+".jpg"):
-                        os.remove(file_path[0:-4]+".jpg")
+                    if "file" in analysis_json["ib"]["info"][key]["slot"][slot]:
+                        file_path  = os.path.join(ib_path,analysis_json["ib"]["info"][key]["slot"][slot]["file"])
+                        if os.path.isfile(file_path):
+                            os.remove(file_path)
+                        if os.path.isfile(file_path[0:-4]+".jpg"):
+                            os.remove(file_path[0:-4]+".jpg")
                 del analysis_json["ib"]["info"][key]["slot"][slot]
                 analysis_json["ib"]["info"][key]["slot"]={}
                 analysis_json = update_slot_info(analysis_json,hit_slot_info,tex_info[hit_index],key,tex_path,ib_path)

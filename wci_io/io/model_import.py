@@ -381,9 +381,9 @@ class ModelImporter:
             for slot_key, tex_info in slot_info.items():
                 tex_file = tex_info.get('file')
                 texname = tex_info.get('name')
-                tex_file=tex_file[0:-4]+".jpg"
                 if not tex_file:
                     continue
+                tex_file=tex_file[0:-4]+".jpg"
                 
                 tex_path = os.path.join(self.ib_path, tex_file)
                 if not os.path.exists(tex_path):

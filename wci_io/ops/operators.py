@@ -5,6 +5,7 @@ import os
 import re
 import json
 from  bpy_extras.io_utils import ImportHelper
+from typing import List, Tuple, Dict, Any
 from collections import defaultdict
 
 from gettext import pgettext
@@ -883,7 +884,7 @@ class WciMatchLodsImporter(bpy.types.Operator):
         #开始比较
         # 存储所有的卡方距离
         match_ib_dist=defaultdict(list)
-        match_ibs={}
+        match_ibs:Dict[str,Tuple[str,float]]={}
         for importer in importers:
             ib_hash = importer.data["ib"]["hash"]
             vertex_count = len(importer.vertices)
@@ -900,7 +901,12 @@ class WciMatchLodsImporter(bpy.types.Operator):
         for ib_hash in match_ib_dist:
             sorted_hash = sorted(match_ib_dist[ib_hash],key = lambda x:x[1])
             if sorted_hash[0][1]<0.1:
-                match_ibs[sorted_hash[0][0]]=ib_hash
+                if sorted_hash[0][0] in match_ibs:
+                    old_dist=match_ibs[sorted_hash[0][0]][1]
+                    if sorted_hash[0][1]<old_dist:
+                        match_ibs[sorted_hash[0][0]]=(ib_hash,sorted_hash[0][1])
+                else:
+                    match_ibs[sorted_hash[0][0]]=(ib_hash,sorted_hash[0][1])
         if len(match_ibs)>0:
             ex_config = ExConfig(game,buf_path,os.path.join(buf_path,"mod"))
             for lod_importer in lods_importers:
@@ -911,7 +917,7 @@ class WciMatchLodsImporter(bpy.types.Operator):
                             shutil.rmtree(lod_importer.ib_path)
                 else:
                     #写匹配编号，并匹配顶点组
-                    ib_hash=match_ibs[lod_importer.data["ib"]["hash"]]
+                    ib_hash=match_ibs[lod_importer.data["ib"]["hash"]][0]
                     for importer in importers:
                         if ib_hash == importer.data["ib"]["hash"]:
                             if len(importer.group_indices)>0 and len(lod_importer.group_indices)>0:#有顶点组才能匹配
@@ -1029,11 +1035,12 @@ class WciUpdateTextOperator(bpy.types.Operator):
 
     def execute(self,context):
         buf_path = bpy.path.abspath(context.scene.wci_props.buf_path)
+        game  = context.scene.wci_props.game
         from ..analysis.analysis_slot import update_custom_tex
         for obj in context.selected_objects:
             ib_hash,sub_alias,name = parse_obj_name(obj.name)
             if ib_hash and sub_alias:
-                slot,slot_info = update_custom_tex(buf_path,ib_hash,sub_alias)
+                slot,slot_info = update_custom_tex(game,buf_path,ib_hash,sub_alias)
                 if slot:
                     if not obj.active_material:
                         obj.active_material = bpy.data.materials.new(name=f"Mat_{ib_hash}-{sub_alias}")
